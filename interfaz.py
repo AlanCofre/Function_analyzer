@@ -6,9 +6,7 @@ import numpy
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
 x = symbols('x')
-
 
 class AnalizadorFunciones:
 
@@ -24,7 +22,7 @@ class AnalizadorFunciones:
             text="Analizador de funciones",
             pady=10
             )
-        
+
         image = tk.Frame(self.root)
         image.pack(expand=False)
         try:
@@ -36,17 +34,14 @@ class AnalizadorFunciones:
             tk.Label(image, text="[imagen]").pack(padx=10)
         title_label.pack()
 
-
         frame_func = tk.Frame(self.root, pady=10)
         frame_func.pack(padx=20)
-
         tk.Label(frame_func, text="Ingrese f(x):").pack(side="left")
         self.entry_function = tk.Entry(frame_func, width=30)
         self.entry_function.pack(padx=10)
 
         frame_x = tk.Frame(self.root, pady=10)
         frame_x.pack(padx=20)
-
         tk.Label(frame_x, text="Valor de x (opcional):").pack(side="left")
         self.entry_x = tk.Entry(frame_x, width=10)
         self.entry_x.pack(padx=10)
@@ -54,7 +49,6 @@ class AnalizadorFunciones:
         #botones
         frame_btn = tk.Frame(self.root, pady=15)
         frame_btn.pack()
-
         btn_analyze = tk.Button(
             frame_btn, text="Analizar funcion",
             command=self.analyze, bg="#00F108", fg="white", width=15
@@ -114,41 +108,40 @@ class AnalizadorFunciones:
         graph_win.title("Grafico")
         graph_win.geometry("1280x720")
 
-        f = lambdify(x, expr, 'numpy')
-        X = numpy.linspace(-10, 10, 400)
-        Y = f(X)
-
-        fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
-        ax.plot(X, Y, label=f"f(x) = {expr}", color="blue")
-        ax.axhline(0, color="black", linewidth=1)
-        ax.axvline(0, color="black", linewidth=1)
-
-        for val in inters_x:
-            try:
-                val_num = float(val)
-                ax.scatter(val_num, 0, color="green", s=60, label="Intersección X")
-            except:
-                pass
-
-        try:
-            ax.scatter(0, float(inters_y), color="purple", s=60, label="Intersección Y")
-        except:
-            pass
-
-        if punto_eval:
-            ax.scatter(punto_eval[0], punto_eval[1], color="red", s=80, label=f"Punto evaluado ({punto_eval[0]}, {punto_eval[1]})")
-
-        ax.set_title("Gráfica de f(x)", fontsize=14)
-        ax.set_xlabel("Eje X")
-        ax.set_ylabel("Eje Y")
-        ax.legend()
-        ax.grid(True)
-
-        canvas = FigureCanvasTkAgg(fig, master=graph_win)
-        canvas.draw()
-        canvas.get_tk_widget().pack(fill="both", expand=True)
-
-
+#        f = lambdify(x, expr, 'numpy')
+#        X = numpy.linspace(-10, 10, 400)
+#        Y = f(X)
+#
+#        fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
+#        ax.plot(X, Y, label=f"f(x) = {expr}", color="blue")
+#        ax.axhline(0, color="black", linewidth=1)
+#        ax.axvline(0, color="black", linewidth=1)
+#
+#       for val in inters_x:
+#            try:
+#                val_num = float(val)
+#                ax.scatter(val_num, 0, color="green", s=60, label="Interseccion X")
+#            except:
+#                pass
+#
+#
+#        try:
+#            ax.scatter(0, float(inters_y), color="blue", s=60, label="Interseccion Y")
+#        except:
+#            pass
+#
+#        if punto_eval:
+#            ax.scatter(punto_eval[0], punto_eval[1], color="red", s=80, label=f"Punto evaluado ({punto_eval[0]}, {punto_eval[1]})")
+#
+#       ax.set_title("Grafica de f(x)", fontsize=14)
+#        ax.set_xlabel("Eje X")
+#        ax.set_ylabel("Eje Y")
+#        ax.legend()
+#        ax.grid(True)
+#
+#        canvas = FigureCanvasTkAgg(fig, master=graph_win)
+#        canvas.draw()
+#        canvas.get_tk_widget().pack(fill="both", expand=True)
 if __name__ == "__main__":
     root = tk.Tk()
     app = AnalizadorFunciones(root)
