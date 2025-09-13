@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from sympy import symbols, sympify, lambdify, solveset, S
 from PIL import Image, ImageTk
-import numpy
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -109,7 +108,6 @@ class AnalizadorFunciones:
         graph_win.geometry("840x620")
 
         x = symbols('x', real=True)
-        # Genera puntos para graficar SIN numpy
         X = [i/20 for i in range(-200, 201)]  # de -10 a 10, paso 0.05
         Y = []
         for xi in X:
