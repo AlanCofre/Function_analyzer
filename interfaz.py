@@ -107,8 +107,8 @@ class AnalizadorFunciones:
         graph_win.title("Gráfico")
         graph_win.geometry("840x620")
 
-        x = symbols('x', real=True)
-        X = [i/20 for i in range(-200, 201)]  # de -10 a 10, paso 0.05
+        # muestreo en puro Python desde -20 a 20, paso 0.1
+        X = [i / 10 for i in range(-200, 201)]  # -20.0 .. 20.0
         Y = []
         for xi in X:
             try:
