@@ -1,9 +1,5 @@
-"""
-Notas:
-- Se prioriza trabajar sobre los reales: ℝ.
-- `calcular_recorrido` intenta primero método simbólico; si no aplica,
-  usa un muestreo numérico robusto (fallback) para estimar el rango.
-"""
+import numpy as np
+from sympy import lambdify
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Tuple, Optional, Iterable
@@ -20,10 +16,7 @@ from sympy.parsing.sympy_parser import (
     implicit_multiplication_application,
     convert_xor
 )
-import numpy as np
-from sympy import lambdify
 
-# Algunas funciones pueden no estar presentes en versiones muy antiguas de SymPy
 try:
     from sympy.calculus.util import function_range  # tipo: ignore
 except Exception:  # pragma: no cover
@@ -35,13 +28,6 @@ except Exception:  # pragma: no cover
 
 def analizar_funcion(expr_str: str, var: str = "x") -> Tuple[object, Symbol]:
     """Convierte un string en expresión simbólica de SymPy y retorna (expr, símbolo).
-
-    Soporta multiplicación implícita ("2x", "x(x+1)") y ^ como potencia.
-
-    Ejemplos:
-        >>> expr, x = analizar_funcion("(x^2-9)/(x-3)")
-        >>> expr
-        (x**2 - 9)/(x - 3)
     """
     if not isinstance(expr_str, str) or not expr_str.strip():
         raise ValueError("expr_str debe ser un string no vacío")
@@ -69,12 +55,7 @@ def analizar_funcion(expr_str: str, var: str = "x") -> Tuple[object, Symbol]:
 
 
 def calcular_dominio(expr, var: str = "x") -> Set:
-    """Calcula el dominio real (donde la función es continua) usando SymPy.
-
-    Para funciones con discontinuidades removibles, devuelve el conjunto
-    donde es continua. Si se requiere el *dominio de definición* (incluye
-    puntos aislados donde existe el valor), considerar añadir esos puntos
-    manualmente evaluando límites.
+    """Calcula el dominio real (donde la función es continua) usando SymPy
     """
     x = Symbol(var, real=True)
     try:
@@ -108,17 +89,6 @@ def calcular_recorrido(expr, var: str = "x",
                         puntos_por_intervalo: int = 400,
                         umbral_infinito: float = 1e6) -> RangoResultado:
     """Estima el rango (recorrido) de f: ℝ→ℝ.
-
-    Estrategia:
-      1) Intento simbólico con `function_range` en el dominio dado (o continuo).
-      2) Si falla o retorna vació, estimación por muestreo numérico robusto:
-         - Malla densa en intervalos del dominio (por defecto [-10,10] y
-           alrededores de posibles asíntotas si se detectan).
-
-    Parámetros clave:
-      - `puntos_por_intervalo`: densidad de muestreo (↑ = más preciso, más costo).
-      - `umbral_infinito`: si |f(x)| excede este valor en muestreo, se asume
-        tendencia a ±∞ y se abre el intervalo correspondiente.
     """
     x = Symbol(var, real=True)
 
@@ -213,12 +183,6 @@ def calcular_recorrido(expr, var: str = "x",
 
 def calcular_intersecciones(expr, var: str = "x") -> Dict[str, object]:
     """Obtiene intersecciones con los ejes.
-
-    Retorna un diccionario:
-      {
-        "x": Set de raíces reales (x-intercepts),
-        "y": valor en x=0 si está definido (y-intercept) o None
-      }
     """
     x = Symbol(var, real=True)
 
@@ -269,7 +233,6 @@ def describir_resultados(expr, var: str = "x") -> str:
 
 
 if __name__ == "__main__":
-    # Pequeña demo manual
     pruebas = [
         "x^2 - 4",
         "(x^2 - 9)/(x-3)",
