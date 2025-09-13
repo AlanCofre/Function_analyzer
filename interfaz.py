@@ -13,7 +13,7 @@ class AnalizadorFunciones:
     def __init__(self, root):
         self.root = root
         self.root.title("Analizador de funciones")
-        self.root.geometry("1280x720")
+        self.root.geometry("720x500")
         self.create_widgets()
 
     def create_widgets(self):
@@ -106,7 +106,7 @@ class AnalizadorFunciones:
     def show_graph(self, expr, inters_x, inters_y, punto_eval=None):
         graph_win = tk.Toplevel(self.root)
         graph_win.title("Gráfico")
-        graph_win.geometry("800x600")
+        graph_win.geometry("840x620")
 
         x = symbols('x', real=True)
         # Genera puntos para graficar SIN numpy
