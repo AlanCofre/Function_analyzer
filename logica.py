@@ -1,6 +1,7 @@
+from __future__ import annotations
 import numpy as np
 from sympy import lambdify
-from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Dict, Tuple, Optional, Iterable
 from sympy import (

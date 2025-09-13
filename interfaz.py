@@ -102,46 +102,61 @@ class AnalizadorFunciones:
 
         except Exception as e:
             messagebox.showerror("Error", f"no se pudo analizar tu funcion\n{e}")
-    #grafico
+
     def show_graph(self, expr, inters_x, inters_y, punto_eval=None):
         graph_win = tk.Toplevel(self.root)
-        graph_win.title("Grafico")
-        graph_win.geometry("1280x720")
+        graph_win.title("Gráfico")
+        graph_win.geometry("800x600")
 
-#        f = lambdify(x, expr, 'numpy')
-#        X = numpy.linspace(-10, 10, 400)
-#        Y = f(X)
-#
-#        fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
-#        ax.plot(X, Y, label=f"f(x) = {expr}", color="blue")
-#        ax.axhline(0, color="black", linewidth=1)
-#        ax.axvline(0, color="black", linewidth=1)
-#
-#       for val in inters_x:
-#            try:
-#                val_num = float(val)
-#                ax.scatter(val_num, 0, color="green", s=60, label="Interseccion X")
-#            except:
-#                pass
-#
-#
-#        try:
-#            ax.scatter(0, float(inters_y), color="blue", s=60, label="Interseccion Y")
-#        except:
-#            pass
-#
-#        if punto_eval:
-#            ax.scatter(punto_eval[0], punto_eval[1], color="red", s=80, label=f"Punto evaluado ({punto_eval[0]}, {punto_eval[1]})")
-#
-#       ax.set_title("Grafica de f(x)", fontsize=14)
-#        ax.set_xlabel("Eje X")
-#        ax.set_ylabel("Eje Y")
-#        ax.legend()
-#        ax.grid(True)
-#
-#        canvas = FigureCanvasTkAgg(fig, master=graph_win)
-#        canvas.draw()
-#        canvas.get_tk_widget().pack(fill="both", expand=True)
+        x = symbols('x', real=True)
+        # Genera puntos para graficar SIN numpy
+        X = [i/20 for i in range(-200, 201)]  # de -10 a 10, paso 0.05
+        Y = []
+        for xi in X:
+            try:
+                yi = expr.subs(x, xi)
+                if hasattr(yi, "is_real") and yi.is_real and not yi.has('zoo', 'nan', 'oo', '-oo'):
+                    Y.append(float(yi))
+                else:
+                    Y.append(float('nan'))
+            except Exception:
+                Y.append(float('nan'))
+
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
+        ax.plot(X, Y, label=f"f(x) = {expr}", color="blue")
+        ax.axhline(0, color="black", linewidth=1)
+        ax.axvline(0, color="black", linewidth=1)
+
+        # Intersecciones X
+        if hasattr(inters_x, '__iter__'):
+            for val in inters_x:
+                try:
+                    val_num = float(val)
+                    ax.scatter(val_num, 0, color="green", s=60, label="Intersección X")
+                except Exception:
+                    pass
+
+        # Intersección Y
+        try:
+            y_val = float(inters_y)
+            ax.scatter(0, y_val, color="blue", s=60, label="Intersección Y")
+        except Exception:
+            pass
+
+        # Punto evaluado
+        if punto_eval:
+            ax.scatter(punto_eval[0], punto_eval[1], color="red", s=80, label=f"Punto evaluado ({punto_eval[0]}, {punto_eval[1]})")
+
+        ax.set_title("Gráfica de f(x)", fontsize=14)
+        ax.set_xlabel("Eje X")
+        ax.set_ylabel("Eje Y")
+        ax.legend()
+        ax.grid(True)
+
+        canvas = FigureCanvasTkAgg(fig, master=graph_win)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = AnalizadorFunciones(root)
